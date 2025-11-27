@@ -5,7 +5,7 @@ abstract class Personnage
   protected $nom;
   protected $vie = 100;       // Par défaut 100 pv
   protected $experience = 0;  // Par défaut 0 xp (Corrige votre erreur actuelle)
-  protected $degats = 0;      // Par défaut 0 dégâts
+  protected $degats = 25;      // Par défaut 0 dégâts
   protected $atout = 0;
   protected $type;
   protected $timeEndormi = 0; // Par défaut 0 (réveillé)
