@@ -3,13 +3,13 @@ abstract class Personnage
 {
   protected $id;
   protected $nom;
-  protected $vie;
-  protected $experience;
-  protected $degats;
-  protected $atout;
+  protected $vie = 100;       // Par défaut 100 pv
+  protected $experience = 0;  // Par défaut 0 xp (Corrige votre erreur actuelle)
+  protected $degats = 0;      // Par défaut 0 dégâts
+  protected $atout = 0;
   protected $type;
-  protected $timeEndormi;
-  protected $niveau;
+  protected $timeEndormi = 0; // Par défaut 0 (réveillé)
+  protected $niveau = 1;      // Par défaut niveau 1
 
   const CEST_MOI = 1;
   const PERSONNAGE_TUE = 2;
