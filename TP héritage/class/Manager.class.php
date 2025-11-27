@@ -1,5 +1,9 @@
 <?php
-require_once "Personnage.class.php";
+// Autoloader pour charger automatiquement les classes
+spl_autoload_register(function ($class) {
+    require_once $class . '.class.php';
+});
+
 class Manager
 {
     private $pdo; // Instance de PDO
@@ -64,11 +68,10 @@ class Manager
         if (class_exists($type)) {
             return new $type($donnees);
         } else {
-            // Fallback si la classe spécifique n'existe pas encore
-            return new Personnage($donnees);
+            return null;
         }
     }
-    
+
 
     // Récupérer la liste des personnages (sauf celui passé en paramètre, utile pour choisir un adversaire)
     public function getList($nom)
@@ -83,7 +86,7 @@ class Manager
             if (class_exists($type)) {
                 $persos[] = new $type($donnees);
             } else {
-                $persos[] = new Personnage($donnees);
+                continue;
             }
         }
 
