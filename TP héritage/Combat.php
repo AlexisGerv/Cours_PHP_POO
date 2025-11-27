@@ -1,40 +1,48 @@
 <?php
+require_once "connect.php"; // Création de $pdo
 
-require_once "class/Personnage.class.php";
-require_once "class/Manager.class.php";
-require_once "class/Magicien.class.php";
-require_once "class/Brute.class.php";
-require_once "class/Guerrier.class.php";
-require_once "class/Assassin.class.php";
-require_once "connect.php";
+// Chargement automatique des classes (plus propre que les require multiples)
+spl_autoload_register(function ($class) {
+    require_once 'class/' . $class . '.class.php';
+});
 
 $manager = new Manager($pdo);
 
-$Karthus = new Magicien([
-    'nom' => "Karthus",
-    'vie' => 100,
-    'experience' => 100,
-    'degats' => 10,
-    'atout' => 10,
-    'type' => "Magicien",
-    'timeEndormi' => 0,
-    'niveau' => 1,
-]);
+// --- 1. Création ou Récupération des persos ---
 
-$Gandalf = new Magicien([
-    'nom' => "Gandalf",
-    'vie' => 100,
-    'experience' => 100,
-    'degats' => 10,
-    'atout' => 10,
-    'type' => "Magicien",
-    'timeEndormi' => 0,
-    'niveau' => 1,  
-]);
+// On vérifie si Karthus existe, sinon on le crée
+if (!$manager->get("Karthus")) {
+    $karthus = new Magicien(['nom' => "Karthus", 'vie' => 100, 'type' => 'Magicien', 'atout' => 10]);
+    $manager->add($karthus);
+} else {
+    $karthus = $manager->get("Karthus");
+}
 
-$Karthus->LancerUnSort($Gandalf);
+// On vérifie si Conan existe, sinon on le crée
+if (!$manager->get("Conan")) {
+    $conan = new Guerrier(['nom' => "Conan", 'vie' => 100, 'type' => 'Guerrier', 'atout' => 5]);
+    $manager->add($conan);
+} else {
+    $conan = $manager->get("Conan");
+}
 
+// --- 2. Action : Le Magicien lance un sort ---
 
+echo "<h3>Action : Sortilège</h3>";
+$karthus->LancerUnSort($conan);
 
+// IMPORTANT : On sauvegarde les modifications dans la BDD !
+$manager->update($karthus); // Pour sauvegarder son gain d'atout
+$manager->update($conan);   // Pour sauvegarder son état endormi
 
+// --- 3. Action : Tentative d'attaque ---
 
+echo "<h3>Action : Combat</h3>";
+// Conan essaie d'attaquer
+$conan->Attaquer($karthus); 
+
+if ($conan->estEndormi()) {
+    echo "Conan ronfle : " . $conan->reveil();
+}
+
+?>
