@@ -1,22 +1,22 @@
 <?php
+// class/Guerrier.class.php
+
 class Guerrier extends Personnage
 {
     public function RecevoirDegats($force)
     {
-        // Spécificité Guerrier : Protection grâce à l'atout
-        $degats = $force - $this->atout;
-        
-        // On augmente l'atout (protection) car il s'en est servi
-        if ($this->atout < 100) { // On met une limite arbitraire pour pas que ça devienne infini
-            $this->atout++;
+        // Si le guerrier a un atout > 0, il réduit les dégâts
+        if ($this->atout > 0) {
+            echo "Le Guerrier utilise son bouclier (Atout " . $this->atout . ") !<br>";
+            $force -= $this->atout;
         }
 
-        if ($degats < 0) {
-            $degats = 0;
+        // On s'assure que les dégâts ne sont pas négatifs (soin)
+        if ($force < 0) {
+            $force = 0;
         }
 
-        // Appel de la méthode parente pour baisser la vie
-        return parent::RecevoirDegats($degats);
+        // On appelle la méthode parente pour appliquer la perte de vie réelle
+        return parent::RecevoirDegats($force);
     }
 }
-?>

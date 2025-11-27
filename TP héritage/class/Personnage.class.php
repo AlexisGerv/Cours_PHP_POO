@@ -16,11 +16,11 @@ abstract class Personnage
   const PERSONNAGE_FRAPPE = 3;
 
   public function __construct(array $donnees)
-  {
-    $this->hydrate($donnees);
-    $this->setType(static::class);
-  }
+    {
+        $this->setType(strtolower(get_class($this)));
 
+        $this->hydrate($donnees);
+    }
   public function hydrate(array $donnees)
   {
     foreach ($donnees as $key => $value) {
@@ -31,7 +31,6 @@ abstract class Personnage
     }
   }
 
-  // --- Nouvelle méthode demandée ---
   public function estEndormi()
   {
     // Si le timestamp de réveil est supérieur au temps actuel, il dort encore
@@ -81,8 +80,33 @@ abstract class Personnage
     
     return self::PERSONNAGE_FRAPPE;
   }
+  /**
+     * Calcule l'atout en fonction des dégâts reçus (100 - vie)
+     * Règles : 
+     * 0-25 dégâts (Vie 75-100) => Atout 4
+     * 25-50 dégâts (Vie 50-75) => Atout 3
+     * 50-75 dégâts (Vie 25-50) => Atout 2
+     * 75-90 dégâts (Vie 10-25) => Atout 1
+     * > 90 dégâts  (Vie 0-10)  => Atout 0
+     */
+    private function calculerAtout()
+    {
+        $degatsSubis = 100 - $this->vie;
 
-  // --- Getters et Setters (inchangés mais condensés ici) ---
+        if ($degatsSubis >= 0 && $degatsSubis < 25) {
+            $this->atout = 4;
+        } elseif ($degatsSubis >= 25 && $degatsSubis < 50) {
+            $this->atout = 3;
+        } elseif ($degatsSubis >= 50 && $degatsSubis < 75) {
+            $this->atout = 2;
+        } elseif ($degatsSubis >= 75 && $degatsSubis < 90) {
+            $this->atout = 1;
+        } else {
+            $this->atout = 0;
+        }
+    }
+
+  // --- Getters et Setters 
   public function GetId() { return $this->id; }
   public function GetNom() { return $this->nom; }
   public function GetVie() { return $this->vie; }
@@ -95,7 +119,17 @@ abstract class Personnage
 
   public function SetId($id) { $this->id = (int) $id; }
   public function SetNom($nom) { if (is_string($nom)) $this->nom = $nom; }
-  public function SetVie($vie) { $this->vie = (int) $vie; }
+ public function SetVie($vie)
+    {
+        $vie = (int) $vie;
+        if ($vie > 100) $vie = 100; // Plafond
+        if ($vie < 0) $vie = 0;     // Plancher
+
+        $this->vie = $vie;
+        
+        // Calcul automatique de l'atout selon les règles du TP
+        $this->calculerAtout(); 
+    }
   public function SetExperience($experience) { $this->experience = (int) $experience; }
   public function SetDegats($degats) { $this->degats = (int) $degats; }
   public function SetAtout($atout) { $this->atout = (int) $atout; }
