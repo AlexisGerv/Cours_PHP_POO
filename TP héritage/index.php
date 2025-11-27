@@ -15,7 +15,9 @@ session_start();
 require_once 'connect.php'; 
 
 $manager = new Manager($pdo);
-$message = ""; 
+$message = "";
+
+
 
 // --- 1. DECONNEXION ---
 if (isset($_GET['logout'])) {
