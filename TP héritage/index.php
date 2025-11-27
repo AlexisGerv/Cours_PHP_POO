@@ -1,15 +1,18 @@
 <?php
-// On démarre la session pour retenir le personnage joué
-session_start();
-
-// Chargement des classes
-require_once 'connect.php'; //
+// 1. D'abord, on charge les classes (Autoloader)
 spl_autoload_register(function ($class) {
     require_once 'class/' . $class . '.class.php';
 });
 
-$manager = new Manager($pdo); //
-$message = ""; // Variable pour afficher les logs de combat
+// 2. Ensuite, on peut démarrer la session
+// PHP connaît maintenant "Guerrier" et peut reconstruire l'objet correctement
+session_start();
+
+// 3. Enfin, la connexion BDD
+require_once 'connect.php'; 
+
+$manager = new Manager($pdo);
+$message = "";
 
 // --- 1. DECONNEXION ---
 if (isset($_GET['logout'])) {
