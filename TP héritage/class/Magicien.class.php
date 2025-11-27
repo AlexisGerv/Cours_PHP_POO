@@ -1,8 +1,17 @@
 <?php
-// class/Magicien.class.php
-
 class Magicien extends Personnage
 {
+    const MAX_VIE = 80; // Un peu fragile
+
+    public function __construct(array $donnees)
+    {
+        // Stats par défaut si non fournies
+        if (!isset($donnees['vie'])) $donnees['vie'] = self::MAX_VIE;
+        if (!isset($donnees['degats'])) $donnees['degats'] = 15;
+        
+        parent::__construct($donnees);
+    }
+
     public function LancerUnSort(Personnage $cible)
     {
         // Règle 1 : Ne peut pas se lancer un sort à lui-même
@@ -17,8 +26,7 @@ class Magicien extends Personnage
             return;
         }
 
-        // Calcul de la durée selon la formule du TP
-        // ($this->atout * 6) * 3600 secondes
+        // Durée du sommeil = Atout * 6 heures
         $duree = ($this->atout * 6) * 3600;
 
         $cible->SetTimeEndormi(time() + $duree);

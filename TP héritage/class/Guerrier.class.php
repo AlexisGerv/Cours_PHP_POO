@@ -1,8 +1,14 @@
 <?php
-// class/Guerrier.class.php
-
 class Guerrier extends Personnage
 {
+    const MAX_VIE = 140; // Sac à PV
+
+    public function __construct(array $donnees)
+    {
+        if (!isset($donnees['vie'])) $donnees['vie'] = self::MAX_VIE;
+        if (!isset($donnees['degats'])) $donnees['degats'] = 10; // Frappe peu fort
+        parent::__construct($donnees);
+    }
     public function RecevoirDegats($force)
     {
         // Si le guerrier a un atout > 0, il réduit les dégâts

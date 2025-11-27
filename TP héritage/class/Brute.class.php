@@ -1,24 +1,29 @@
 <?php
 class Brute extends Personnage
 {
-    // La Brute utilise son atout pour FRAPPER plus fort
-    public function Attaque(Personnage $cible)
+    const MAX_VIE = 110; // Solide
+
+    public function __construct(array $donnees)
     {
-        // On récupère les dégâts de base
+        if (!isset($donnees['vie'])) $donnees['vie'] = self::MAX_VIE;
+        if (!isset($donnees['degats'])) $donnees['degats'] = 18; 
+        
+        parent::__construct($donnees);
+    }
+
+    public function Attaquer(Personnage $cible)
+    {
         $degatsDeBase = $this->degats;
         
-        // On ajoute l'atout aux dégâts
+        // La Brute ajoute son atout (force) aux dégâts
         $bonus = $this->atout; 
-        
-        // On boost temporairement les dégâts le temps de l'attaque
         $this->degats += $bonus;
         
         echo "La Brute charge ! (Bonus de force : +" . $bonus . ")<br>";
         
-        // On lance l'attaque standard avec la force augmentée
         $retour = parent::Attaquer($cible);
         
-        // On remet les dégâts normaux après le coup
+        // On remet les dégâts normaux
         $this->degats = $degatsDeBase;
         
         return $retour;
