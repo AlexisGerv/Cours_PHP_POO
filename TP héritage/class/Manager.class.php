@@ -137,4 +137,19 @@ class Manager
             echo "<br> Niveau : " . $perso->GetNiveau();
         }
     }
+
+    // Vérifie si un personnage existe (par ID ou par Nom)
+    public function exists($info)
+    {
+        // Si c'est un entier, on vérifie l'ID
+        if (is_int($info)) {
+            return (bool) $this->pdo->query('SELECT COUNT(*) FROM personnage WHERE id = ' . $info)->fetchColumn();
+        }
+
+        // Sinon, c'est une chaîne de caractères (le nom), on vérifie s'il est déjà pris
+        $q = $this->pdo->prepare('SELECT COUNT(*) FROM personnage WHERE nom = :nom');
+        $q->execute([':nom' => $info]);
+
+        return (bool) $q->fetchColumn();
+    }
 }
