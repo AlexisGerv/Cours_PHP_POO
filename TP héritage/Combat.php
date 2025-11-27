@@ -10,16 +10,31 @@ require_once "connect.php";
 
 $manager = new Manager($pdo);
 
-$Gandalf = new Magicien([
-    "nom" => "Gandalf",
-    "vie" => 100,
-    "experience" => 50,
-    "degats" => 20,
-    "atout" => 10,
-    "type" => "Magicien",
-    "timeEndormi" => 0,
+$Karthus = new Magicien([
+    'nom' => "Karthus",
+    'vie' => 100,
+    'experience' => 100,
+    'degats' => 10,
+    'atout' => 10,
+    'type' => "Magicien",
+    'timeEndormi' => 0,
+    'niveau' => 1,
 ]);
 
-$manager->add($Gandalf);
-$manager->count();
+$Gandalf = new Magicien([
+    'nom' => "Gandalf",
+    'vie' => 100,
+    'experience' => 100,
+    'degats' => 10,
+    'atout' => 10,
+    'type' => "Magicien",
+    'timeEndormi' => 0,
+    'niveau' => 1,  
+]);
+
+$Karthus->LancerUnSort($Gandalf);
+
+
+
+
 

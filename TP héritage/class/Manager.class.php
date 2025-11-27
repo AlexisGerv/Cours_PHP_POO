@@ -13,15 +13,16 @@ class Manager
     public function add(Personnage $perso)
     {
         // Préparation de la requête d'insertion en respectant les colonnes du SQL
-        $q = $this->pdo->prepare('INSERT INTO personnage(nom, vie, experience, degats, atout, type, timeEndormi) VALUES(:nom, :vie, :experience, :degats, :atout, :type, :timeEndormi)');
+        $q = $this->pdo->prepare('INSERT INTO personnage(nom, vie, experience, degats, atout, type, timeEndormi, niveau) VALUES(:nom, :vie, :experience, :degats, :atout, :type, :timeEndormi, :niveau)');
 
         $q->bindValue(':nom', $perso->GetNom());
         $q->bindValue(':vie', $perso->GetVie(), PDO::PARAM_INT);
         $q->bindValue(':experience', $perso->GetExperience(), PDO::PARAM_INT);
         $q->bindValue(':degats', $perso->GetDegats(), PDO::PARAM_INT);
-        $q->bindValue(':atout', $perso->GetAtout(), PDO::PARAM_INT); // Champ spécifique au TP
-        $q->bindValue(':type', $perso->GetType()); // Champ spécifique au TP (ex: 'Guerrier', 'Magicien')
+        $q->bindValue(':atout', $perso->GetAtout(), PDO::PARAM_INT);
+        $q->bindValue(':type', $perso->GetType());
         $q->bindValue(':timeEndormi', $perso->GetTimeEndormi(), PDO::PARAM_INT);
+        $q->bindValue(':niveau', $perso->GetNiveau(), PDO::PARAM_INT);
         $q->execute();
 
         // On hydrate le personnage avec l'ID généré par la BDD
@@ -29,7 +30,9 @@ class Manager
             'id' => $this->pdo->lastInsertId(),
             'degats' => $perso->GetDegats(),
             'atout' => $perso->GetAtout(),
-            'type' => $perso->GetType()
+            'type' => $perso->GetType(),
+            'timeEndormi' => $perso->GetTimeEndormi(),
+            'niveau' => $perso->GetNiveau(),
         ]);
     }
 
@@ -43,9 +46,9 @@ class Manager
     public function get($info)
     {
         if (is_int($info)) {
-            $q = $this->pdo->query('SELECT id, nom, vie, experience, degats, atout, type FROM personnage WHERE id = ' . $info);
+            $q = $this->pdo->query('SELECT id, nom, vie, experience, degats, atout, type, timeEndormi, niveau FROM personnage WHERE id = ' . $info);
         } else {
-            $q = $this->pdo->prepare('SELECT id, nom, vie, experience, degats, atout, type FROM personnage WHERE nom = :nom');
+            $q = $this->pdo->prepare('SELECT id, nom, vie, experience, degats, atout, type, timeEndormi, niveau FROM personnage WHERE nom = :nom');
             $q->execute([':nom' => $info]);
         }
 
@@ -65,13 +68,14 @@ class Manager
             return new Personnage($donnees);
         }
     }
+    
 
     // Récupérer la liste des personnages (sauf celui passé en paramètre, utile pour choisir un adversaire)
     public function getList($nom)
     {
         $persos = [];
 
-        $q = $this->pdo->prepare('SELECT id, nom, vie, experience, degats, atout, type FROM personnage WHERE nom <> :nom ORDER BY nom');
+        $q = $this->pdo->prepare('SELECT id, nom, vie, experience, degats, atout, type, timeEndormi, niveau FROM personnage WHERE nom <> :nom ORDER BY nom');
         $q->execute([':nom' => $nom]);
 
         while ($donnees = $q->fetch(PDO::FETCH_ASSOC)) {
@@ -89,12 +93,14 @@ class Manager
     // Mettre à jour les infos d'un personnage
     public function update(Personnage $perso)
     {
-        $q = $this->pdo->prepare('UPDATE personnage SET vie = :vie, experience = :experience, degats = :degats, atout = :atout WHERE id = :id');
+        $q = $this->pdo->prepare('UPDATE personnage SET vie = :vie, experience = :experience, degats = :degats, atout = :atout, timeEndormi = :timeEndormi, niveau = :niveau WHERE id = :id');
 
         $q->bindValue(':vie', $perso->GetVie(), PDO::PARAM_INT);
         $q->bindValue(':experience', $perso->GetExperience(), PDO::PARAM_INT);
         $q->bindValue(':degats', $perso->GetDegats(), PDO::PARAM_INT);
         $q->bindValue(':atout', $perso->GetAtout(), PDO::PARAM_INT);
+        $q->bindValue(':timeEndormi', $perso->GetTimeEndormi(), PDO::PARAM_INT);
+        $q->bindValue(':niveau', $perso->GetNiveau(), PDO::PARAM_INT);
         $q->bindValue(':id', $perso->GetId(), PDO::PARAM_INT);
 
         $q->execute();
@@ -102,11 +108,30 @@ class Manager
 
     public function count()
     {
-        echo "Nombre de personnages : " . $this->pdo->query('SELECT COUNT(*) FROM personnage')->fetchColumn();
+        $q = $this->pdo->query('SELECT COUNT(*) FROM personnage');
+        return $q->fetchColumn();
     }
-
-    public function setDb(PDO $pdo)
+    public function AfficherStatPerso($id, $type)
     {
-        $this->pdo = $pdo;
+        $q = $this->pdo->prepare('SELECT id, nom, vie, experience, degats, atout, type, timeEndormi, niveau FROM personnage WHERE id = :id');
+        $q->execute([':id' => $id]);
+        $donnees = $q->fetch(PDO::FETCH_ASSOC);
+
+        if (!$donnees) {
+            echo "Personnage introuvable.";
+            return;
+        }
+
+        if ($donnees['type'] == $type) {
+            $perso = new $type($donnees);
+            echo "Statistiques de " . $perso->GetNom() . " :";
+            echo "<br> Vie : " . $perso->GetVie();
+            echo "<br> Experience : " . $perso->GetExperience();
+            echo "<br> Degats : " . $perso->GetDegats();
+            echo "<br> Atout : " . $perso->GetAtout();
+            echo "<br> Type : " . $perso->GetType();
+            echo "<br> TimeEndormi : " . $perso->GetTimeEndormi();
+            echo "<br> Niveau : " . $perso->GetNiveau();
+        }
     }
 }

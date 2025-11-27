@@ -11,6 +11,7 @@ abstract class Personnage
   protected $atout; // Attribut spécifique (ex: Puissance magique ou Protection)
   protected $type;  // 'Guerrier', 'Magicien', etc.
   protected $timeEndormi;
+  protected $niveau;
 
   // Constantes pour la gestion des combats (valeurs de retour)
   const CEST_MOI = 1; // Si on se frappe soi-même
@@ -20,17 +21,16 @@ abstract class Personnage
   public function __construct(array $donnees)
   {
     $this->hydrate($donnees);
-    // Définit le type automatiquement basé sur le nom de la classe (ex: 'Guerrier')
-    // static::class permet de récupérer le nom de la classe fille si hérité
-    $this->setType(static::class); 
+
+    $this->setType(static::class);
   }
 
-  // Hydratation : assigne les valeurs aux attributs
+
   public function hydrate(array $donnees)
   {
     foreach ($donnees as $key => $value) {
-      // On récupère le nom du setter correspondant à l'attribut (ex: setNom)
-      $method = 'set' . ucfirst($key);
+
+      $method = 'Set' . ucfirst($key);
 
       if (method_exists($this, $method)) {
         $this->$method($value);
@@ -40,14 +40,42 @@ abstract class Personnage
 
   // --- Getters ---
 
-  public function GetId() { return $this->id; }
-  public function GetNom() { return $this->nom; }
-  public function GetVie() { return $this->vie; }
-  public function GetExperience() { return $this->experience; }
-  public function GetDegats() { return $this->degats; }
-  public function GetAtout() { return $this->atout; }
-  public function GetType() { return $this->type; }
-  public function GetTimeEndormi() { return $this->timeEndormi; }
+  public function GetId()
+  {
+    return $this->id;
+  }
+  public function GetNom()
+  {
+    return $this->nom;
+  }
+  public function GetVie()
+  {
+    return $this->vie;
+  }
+  public function GetExperience()
+  {
+    return $this->experience;
+  }
+  public function GetDegats()
+  {
+    return $this->degats;
+  }
+  public function GetAtout()
+  {
+    return $this->atout;
+  }
+  public function GetType()
+  {
+    return $this->type;
+  }
+  public function GetTimeEndormi()
+  {
+    return $this->timeEndormi;
+  }
+  public function GetNiveau()
+  {
+    return $this->niveau;
+  }
 
   // --- Setters ---
 
@@ -69,7 +97,7 @@ abstract class Personnage
   public function SetVie($vie)
   {
     $vie = (int) $vie;
-    if ($vie >= 0 && $vie <= 1000) { // Exemple de limite max, à adapter
+    if ($vie > 0) {
       $this->vie = $vie;
     }
   }
@@ -105,9 +133,31 @@ abstract class Personnage
     }
   }
 
-  public function  SetTimeEndormi($time)
+  public function SetTimeEndormi($time)
   {
-    // Le SQL indique un type DATE, mais on gère ici la donnée brute
     $this->timeEndormi = $time;
   }
+
+  public function SetNiveau($niveau)
+  {
+    $niveau = (int) $niveau;
+    if ($niveau >= 0) {
+      $this->niveau = $niveau;
+    }
+  }
+
+  //--- Combat ---
+  public function Attaquer(Personnage $cible)
+  {
+    $cible->RecevoirDegats($this->GetDegats());
+  }
+
+  public function RecevoirDegats($force)
+  {
+    $force = (int) $force;
+    if ($force >= 0) {
+      $this->vie -= $force;
+    }
+  }
+
 }
