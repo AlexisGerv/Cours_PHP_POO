@@ -1,0 +1,211 @@
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            color: #495057;
+        }
+
+        h1 {
+            text-align: center;
+            color: #343a40;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Alert Box */
+        .alert {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #ffeeba;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Grid Layout */
+        .arena {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 320px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Forms */
+        form {
+            margin-top: 15px;
+        }
+
+        input[type="text"],
+        select {
+            padding: 12px;
+            width: 65%;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            margin-right: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            padding: 12px 20px;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: bold;
+        }
+
+        input[type="submit"]:hover {
+            background: #0b5ed7;
+        }
+
+        .full-width {
+            width: 100% !important;
+            margin-top: 10px;
+        }
+
+        /* Card Design */
+        .perso-card {
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            position: relative;
+            background: #fff;
+            transition: transform 0.2s;
+        }
+
+        .perso-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .my-perso {
+            border: 2px solid #0d6efd;
+            background-color: #f8f9fa;
+        }
+
+        /* Stats & Bars */
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        .hp-bar-bg {
+            background: #e9ecef;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .hp-bar-fill {
+            height: 100%;
+            background: #198754;
+            transition: width 0.5s ease-out;
+        }
+
+        .stat-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .bg-degats {
+            background-color: #dc3545;
+        }
+
+        .bg-atout {
+            background-color: #0dcaf0;
+            color: #000;
+        }
+
+        .bg-type {
+            background-color: #6c757d;
+        }
+
+        /* Buttons & Actions */
+        .actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-attack {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-attack:hover {
+            background: #bb2d3b;
+        }
+
+        .btn-spell {
+            background: #6610f2;
+            color: white;
+        }
+
+        .btn-spell:hover {
+            background: #520dc2;
+        }
+
+        /* States */
+        .sleeping {
+            opacity: 0.7;
+            background-color: #e2e6ea;
+            border-style: dashed;
+        }
+
+        .zzz {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-weight: bold;
+            color: #6610f2;
+            font-size: 1.2em;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
